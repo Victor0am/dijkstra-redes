@@ -3,7 +3,7 @@ CFLAGS	:= -w
 
 BIN		:= bin
 SRC		:= src
-INCLUDE	:= .
+INCLUDE	:= src
 
 EXECUTABLE	:= trab2
 SOURCEDIRS	:= $(shell find $(SRC) -type d)
