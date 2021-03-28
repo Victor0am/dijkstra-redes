@@ -2,7 +2,7 @@ CC		:= gcc
 CFLAGS	:= -w 
 
 BIN		:= bin
-SRC		:= .
+SRC		:= src
 INCLUDE	:= .
 
 EXECUTABLE	:= trab2
