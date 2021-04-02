@@ -3,12 +3,14 @@
 
 typedef struct edge Edge;
 
-Edge* init_edge (int ori, int dst, double weight);
+Edge* init_edge_list(int dst, double weight);
 
-void show_edge (Edge* edge);
+void add_edge(Node* node, int dest, double weight);
 
-void destroy_edge (Edge* edge);
+void show_edge(Edge* edge);
 
-void destroy_edge_vector (Edge** edges, int n_edges);
+void destroy_edge(Edge* edge);
+
+void destroy_edge_vector(Edge* edges);
 
 #endif

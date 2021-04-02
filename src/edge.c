@@ -1,38 +1,50 @@
-#include<stdlib.h>
-#include<stdio.h>
 #include "edge.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "node.h"
+
 struct edge {
-    int ori;
-    int dst;
+    Edge* next;
+    int dest;
     double weight;
 };
 
-Edge* init_edge (int ori, int dst, double weight) {
-    Edge* new_edge = (Edge*) malloc (sizeof(Edge));
-    new_edge->ori = ori;
-    printf("%d ", new_edge->ori);
-    new_edge->dst = dst;
-    printf("%d ", new_edge->dst);
+Edge* init_edge_list(int dest, double weight) {
+    Edge* new_edge = (Edge*)malloc(sizeof(Edge));
+    new_edge->next = NULL;
+    new_edge->dest = dest;
     new_edge->weight = weight;
-    printf("%lf\n", new_edge->weight);
 
     return new_edge;
 }
 
-void show_edge (Edge* edge) {
-    printf("ori: %d, dst: %d, weight: %lf\n", edge->ori, edge->dst, edge->weight);
+void add_edge(Node* node, int dest, double weight) {
+    Edge* w = get_w(node);
+    Edge* new_edge = (Edge*)malloc(sizeof(Edge));
+    if (w != NULL) {
+        new_edge->next = w;
+    }
+    set_w(node, new_edge);
+    new_edge->dest = dest;
+    new_edge->weight = weight;
 }
 
-void destroy_edge (Edge* edge) {
+void show_edge(Edge* edge) {
+    printf("dst: %d, weight: %lf\n", edge->dest, edge->weight);
+}
+
+void destroy_edge(Edge* edge) {
     if (edge != NULL)
         free(edge);
-} 
+}
 
-void destroy_edge_vector (Edge** edges, int n_edges) {
-    for (int i = 0; i < n_edges; i++){
-        show_edge(edges[i]);
-        destroy_edge(edges[i]);
+void destroy_edge_vector(Edge* edges) {
+    while (edges != NULL) {
+        Edge* aux = edges->next;
+        destroy_edge(edges);
+        edges = aux;
     }
-    free(edges);
-} 
+    //free(edges);
+}
