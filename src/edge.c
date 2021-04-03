@@ -20,15 +20,26 @@ Edge* init_edge_list(int dest, double weight) {
     return new_edge;
 }
 
-void add_edge(Node* node, int dest, double weight) {
-    Edge* w = get_w(node);
-    Edge* new_edge = (Edge*)malloc(sizeof(Edge));
-    if (w != NULL) {
-        new_edge->next = w;
-    }
-    set_w(node, new_edge);
-    new_edge->dest = dest;
-    new_edge->weight = weight;
+int get_dest(Edge* edge){
+    return edge->dest;
+}
+
+
+
+double get_weight(Edge* edge){
+    return edge->weight;
+}
+
+void set_weight(Edge* edge, double weight) {
+    edge->weight = weight;
+}
+
+Edge* get_next(Edge* edge){
+    return edge->next;
+}
+
+void set_next(Edge* edge, Edge* next) {
+    edge->next = next;
 }
 
 void show_edge(Edge* edge) {
@@ -46,5 +57,5 @@ void destroy_edge_vector(Edge* edges) {
         destroy_edge(edges);
         edges = aux;
     }
-    //free(edges);
+    // free(edges);
 }

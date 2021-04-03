@@ -6,7 +6,9 @@
 
 typedef struct graph Graph;
 
-Graph* init_graph(Node** nodes, Edge** edges, double* w, int** csm);
+Graph* init_graph(Node** nodes, int n, int* servers, int* monitors, int* clients);
+
+double dijkstra(Graph* graph, int src, int dest, int n_edges);
 
 void destroy_graph(Graph* g);
 

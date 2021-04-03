@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "./edge.c"
+#include "./edge.h"
 
 struct node {
     Edge* w;
@@ -11,6 +11,7 @@ struct node {
 Node* init_node() {
     // initializes empty node
     Node* new_node = (Node*)malloc(sizeof(Node));
+    new_node->w = NULL;
     return new_node;
 }
 
@@ -21,6 +22,18 @@ Node** init_node_vector(int n) {
     }
 
     return nodes;
+}
+
+void add_edge(Node* node, int dest, double weight) {
+    Edge* new_edge = init_edge_list(dest, weight);
+
+    if (node->w == NULL) {
+        node->w = new_edge;
+    } else {
+        Edge* w = node->w;
+        set_next(node->w, w);
+        node->w = new_edge;
+    }
 }
 
 Edge* get_w(Node* node) {
@@ -39,4 +52,6 @@ void destroy_node_vector(Node** node, int n_nodes) {
     for (int i = 0; i < n_nodes; i++) {
         destroy_node(node[i]);
     }
+    
+    free(node);
 }

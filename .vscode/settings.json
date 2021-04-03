@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "math.h": "c"
+        "math.h": "c",
+        "heap.h": "c",
+        "limits.h": "c",
+        "climits": "c",
+        "edge.h": "c"
     }
 }
