@@ -24,8 +24,6 @@ int get_dest(Edge* edge){
     return edge->dest;
 }
 
-
-
 double get_weight(Edge* edge){
     return edge->weight;
 }
@@ -35,7 +33,9 @@ void set_weight(Edge* edge, double weight) {
 }
 
 Edge* get_next(Edge* edge){
-    return edge->next;
+    if(edge->next != NULL){
+        return edge->next;
+    }
 }
 
 void set_next(Edge* edge, Edge* next) {
@@ -49,13 +49,15 @@ void show_edge(Edge* edge) {
 void destroy_edge(Edge* edge) {
     if (edge != NULL)
         free(edge);
+        edge == NULL;
 }
 
 void destroy_edge_vector(Edge* edges) {
+    Edge* aux;
     while (edges != NULL) {
-        Edge* aux = edges->next;
-        destroy_edge(edges);
-        edges = aux;
+        aux = edges;
+        edges = edges->next;
+        destroy_edge(aux);
     }
-    // free(edges);
+    free(edges);
 }

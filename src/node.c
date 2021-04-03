@@ -1,6 +1,7 @@
 #include "./node.h"
 
 #include <stdlib.h>
+#include<stdio.h>
 
 #include "./edge.h"
 
@@ -30,8 +31,7 @@ void add_edge(Node* node, int dest, double weight) {
     if (node->w == NULL) {
         node->w = new_edge;
     } else {
-        Edge* w = node->w;
-        set_next(node->w, w);
+        set_next(new_edge, node->w);
         node->w = new_edge;
     }
 }
@@ -46,12 +46,13 @@ void set_w(Node* node, Edge* w) {
 
 void destroy_node(Node* node) {
     destroy_edge_vector(node->w);
+    free(node);
 }
 
 void destroy_node_vector(Node** node, int n_nodes) {
     for (int i = 0; i < n_nodes; i++) {
         destroy_node(node[i]);
     }
-    
+
     free(node);
 }

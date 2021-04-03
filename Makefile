@@ -1,5 +1,5 @@
 CC		:= gcc
-CFLAGS	:= -w 
+# CFLAGS	:= -w 
 
 BIN		:= bin
 SRC		:= src

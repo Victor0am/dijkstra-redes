@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "./heap.h"
 #include "./edge.h"
 #include <float.h>
@@ -35,6 +36,9 @@ void heap_insert(Heap* heap, int pos, double new_dist) {
     heap->keys[heap->n] = pos;
     heap->dist_to[pos] = new_dist; 
     fix_up(heap, heap->n);
+    // for(int i = 0; i < heap->n; i++){
+    //     printf("%d", heap->keys[i]);
+    // }
 }
 
 void exchange (Heap* heap, int j, int k) {
@@ -45,29 +49,30 @@ void exchange (Heap* heap, int j, int k) {
 }
 
 void fix_up(Heap* heap, int k) {
-    // swim up
-    while (k > 1 && get_dist(heap, k/2) < get_dist(heap, k)) {
+    // swim up()
+    while (k > 1 && (get_dist(heap, k/2) < get_dist(heap, k))) {
         exchange(heap, k, k/2); 
         k = k/2;
     }
+    /*
+    while (k > 1 && less(a[k/2], a[k])) {
+        exch(a[k], a[k/2]);
+        k = k/2;
+    }
+    */
 }
 
 void fix_down(Heap* heap, int sz, int k) {
-    // sink
     int aux;
-    int aux_edge;
-    double aux_double;
 
-    while (2 + k < sz) {
+    while (2 * k <= sz) {
         aux = 2*k;
        
-        if (aux < sz && get_dist(heap, aux) > get_dist(heap, aux+1)) {
+        if (aux < sz && get_dist(heap, aux+1) < get_dist(heap, aux)) 
             aux++;
-        }
-
-        if (get_dist(heap, aux) <= get_dist(heap, k)){
-            break;        
-        }
+        
+        if (get_dist(heap, aux) <= get_dist(heap, k))
+            break;
 
         exchange(heap, k, aux);
         k = aux;
@@ -87,7 +92,18 @@ int heap_size(Heap* heap) {
 }
 
 int heap_min(Heap* heap) {
-    return heap->keys[1];
+    /*
+    Item max = pq[1];
+    exch(pq[1], pq[N]);
+    N--;
+    fix_down(pq, N, 1);
+    return max;
+    */
+    int min = heap->keys[1];
+    exchange(heap, 1, heap->n);
+    heap->n--;
+    fix_down(heap, heap->n, 1);
+    return min;
 }
 
 double get_heap_dist(Heap* heap, int v) {

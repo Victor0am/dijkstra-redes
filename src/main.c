@@ -41,10 +41,21 @@ int main(int argc, char** argv) {
 
     Graph* graph = init_graph(nodes, n_nodes, servers, clients, monitors);
 
-    // double dist1 = dijkstra(graph, servers[1], clients[1], n_edges);
-    // double dist2 = dijkstra(graph, clients[1], servers[1], n_edges);
+    // Printa as arestas
+    // for(int i = 0; i < n_nodes; i++){
+    //     Node* node = nodes[i];
+    //     printf("Arestas de %d\n", i);
+    //     for(Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)){
+    //         printf("\tDEST: %d", get_dest(edge));
+    //         printf("\tWEIG: %lf\n", get_weight(edge));
+    //     }
+    //     printf("\n");
+    // }
 
-    // printf("RESULTADO: %d\n", dist1+dist2);
+    double dist1 = dijkstra(graph, servers[1], clients[1], n_edges);
+    double dist2 = dijkstra(graph, clients[1], servers[1], n_edges);
+
+    printf("RESULTADO: %lf\n", dist1+dist2);
     
     fclose(reader);
     fclose(writer);

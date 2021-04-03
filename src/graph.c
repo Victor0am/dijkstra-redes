@@ -3,7 +3,7 @@
 #include "./edge.h"
 #include "./node.h"
 #include <float.h>
-
+#include<stdio.h>
 #include <stdlib.h>
 
 struct graph {
@@ -73,22 +73,27 @@ double dijkstra(Graph* graph, int src, int dest, int n_edges){
   
         Node* node = graph->nodes[src];
 
-        for(Edge* edge = get_w(node); edge != NULL; edge = get_next(edge))
-        {
+        for(Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)){
             // Get vertex label and weight of current adjacent
             // of u.
             int v = get_dest(edge);
-            int weight = get_weight(edge);
-
+            double weight = get_weight(edge);
+            printf("\tDEST: %d", v);
+            printf("\tWEIG: %lf\n", weight);
             double dist_u = get_heap_dist(heap, u);
             double dist_v = get_heap_dist(heap, v);
             
             //  If there is shorted path to v through u.
             if (dist_v > dist_u + weight) {
                 // Updating distance of v
-                heap_insert(heap, v, dist_v); 
+                heap_insert(heap, v, dist_u + weight); 
             }
         }
+    }
+
+    for(int i =0; i < 5; i++){
+        double aux = (get_heap_dist(heap, i) > 1000) ? 1000 : get_heap_dist(heap, i);
+        printf("DEST %d: %.2lf\n", i, aux);
     }
 
     distance = get_heap_dist(heap, dest);
