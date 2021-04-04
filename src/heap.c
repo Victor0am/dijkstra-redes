@@ -21,7 +21,7 @@ Heap* heap_init(int max_n, int n_nodes, int src) {
     new->keys = (int*) malloc(sizeof(int)*(n_nodes+1));
     
     for(int i = 0; i < n_nodes; i++){
-            dist_to[i] = DBL_MAX;        
+            dist_to[i] = DBL_MAX;
     }
     
     new->dist_to = dist_to;
@@ -41,7 +41,7 @@ void heap_insert(Heap* heap, int pos, double new_dist) {
     // }
 }
 
-void exchange (Heap* heap, int j, int k) {
+static void exchange (Heap* heap, int j, int k) {
     int aux_edge;
     aux_edge = heap->keys[j];
     heap->keys[j] = heap->keys[k];
