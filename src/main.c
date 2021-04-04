@@ -56,7 +56,23 @@ int main(int argc, char** argv) {
     double dist2 = dijkstra(graph, clients[1], servers[1], n_edges);
 
     printf("RESULTADO: %lf\n", dist1+dist2);
-    
+
+    double dist3 = dijkstra(graph, servers[1], monitors[1], n_edges);
+    double dist4 = dijkstra(graph, monitors[1], servers[1], n_edges);
+    printf("RESULTADO 2 pt1: %lf\n", dist3+dist4);
+
+    double dist3_2 = dijkstra(graph, clients[1], monitors[1], n_edges);
+    double dist4_2 = dijkstra(graph, monitors[1], clients[1], n_edges);
+    printf("RESULTADO 2 pt2: %lf\n", dist3_2+dist4_2);
+
+    double dist5 = dijkstra(graph, servers[1], monitors[2], n_edges);
+    double dist6 = dijkstra(graph, monitors[2], servers[1], n_edges);
+    printf("RESULTADO 3 pt1: %lf\n", dist5+dist6);
+
+    double dist5_2 = dijkstra(graph, clients[1], monitors[2], n_edges);
+    double dist6_2 = dijkstra(graph, monitors[2], clients[1], n_edges);
+    printf("RESULTADO 3 pt2: %lf\n", dist5_2+dist6_2);
+
     fclose(reader);
     fclose(writer);
     destroy_graph(graph);
