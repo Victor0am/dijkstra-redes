@@ -70,16 +70,16 @@ double dijkstra(Graph* graph, int src, int dest, int n_edges){
 
     while(!heap_is_empty(heap)){
         int u = heap_min(heap); // remove
-  
-        Node* node = graph->nodes[src];
+        Node* node = graph->nodes[u];
 
         for(Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)){
             // Get vertex label and weight of current adjacent
             // of u.
+
             int v = get_dest(edge);
             double weight = get_weight(edge);
-            printf("\tDEST: %d", v);
-            printf("\tWEIG: %lf\n", weight);
+//            printf("\tDEST: %d", v);
+//            printf("\tWEIG: %lf\n", weight);
             double dist_u = get_heap_dist(heap, u);
             double dist_v = get_heap_dist(heap, v);
             
@@ -93,7 +93,7 @@ double dijkstra(Graph* graph, int src, int dest, int n_edges){
 
     for(int i =0; i < 5; i++){
         double aux = (get_heap_dist(heap, i) > 1000) ? 1000 : get_heap_dist(heap, i);
-        printf("DEST %d: %.2lf\n", i, aux);
+//        printf("DEST %d: %.2lf\n", i, aux);
     }
 
     distance = get_heap_dist(heap, dest);
