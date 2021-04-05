@@ -106,7 +106,6 @@ double RTT_ratio(double RTT, double RTT_m) {
     return RTT_m / RTT;
 }
 
-
 Ratio** calc_ratios(Graph* graph){
     int* clients = graph->csm[0];
     int* servers = graph->csm[1];
