@@ -7,9 +7,8 @@
 #include "./ratio.h"
 
 /**
- * [EN] Reads file of size n and initializes an array with values read from file.
- * [PT] Ler arquivo de tamanho n e inicializa um vetor com valores lido do arquivo.
- * 
+ * Reads file of size n and initializes an array with values read from file.
+ * (PT: Ler arquivo de tamanho n e inicializa um vetor com valores lido do arquivo.)
  * @param {FILE* fp} - File pointer
  * @param {int n} - Size of array - 1
  * @return array initialized and stores values read from file.
@@ -25,7 +24,8 @@ int* read_create_array(FILE* fp, int n) {
 }
 
 /**
- * Writes ratio's information in file. Ratio must be sorted beforhand by rtt_ratio atribute.
+ * Writes ratio's information in file. The ratio structure must be sorted beforhand by rtt_ratio atribute.
+ * (PT: Escreve as informacoes de ratio no arquivo. A estrutura ratio deve estar anteriormente organizado pelo atributo rtt_ratio.)
  * 
  * @param {FILE* fp} - File pointer
  * @param {Ratios** ratios} - Array of ratio
