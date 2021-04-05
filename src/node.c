@@ -45,7 +45,7 @@ void set_w(Node* node, Edge* w) {
 }
 
 void destroy_node(Node* node) {
-    destroy_edge_vector(node->w);
+    destroy_edge_list(node->w);
     free(node);
 }
 
