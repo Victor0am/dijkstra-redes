@@ -4,6 +4,11 @@
 #include "./node.h"
 #include "./edge.h"
 
+/**
+ * @param {Edge* next} - next struct edge
+ * @param {int dest} - destiny
+ * @param {double weight} - edge weight
+ */
 struct edge {
     Edge* next;
     int dest;
@@ -41,17 +46,12 @@ void set_next(Edge* edge, Edge* next) {
     edge->next = next;
 }
 
-void show_edge(Edge* edge) {
-    printf("dst: %d, weight: %lf\n", edge->dest, edge->weight);
-}
-
 void destroy_edge(Edge* edge) {
     if (edge != NULL)
         free(edge);
-        edge == NULL;
 }
 
-void destroy_edge_vector(Edge* edges) {
+void destroy_edge_list(Edge* edges) {
     Edge* aux;
     while (edges != NULL) {
         aux = edges;
