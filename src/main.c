@@ -4,10 +4,19 @@
 #include "./graph.h"
 #include "./edge.h"
 #include "./node.h"
+#include "./ratio.h"
 
+/**
+ * [EN] Reads file of size n and initializes an array with values read from file.
+ * [PT] Ler arquivo de tamanho n e inicializa um vetor com valores lido do arquivo.
+ * 
+ * @param {FILE* fp} - File pointer
+ * @param {int n} - Size of array - 1
+ * @return array initialized and stores values read from file.
+ */
 int* read_create_array(FILE* fp, int n) {
     int* array = (int*)malloc(sizeof(int) * (n + 1));
-    array[0] = n; //primeira posição armazena o tamanho do vetor
+    array[0] = n; // first index stores the size of the vector
     for (int i = 1; i <= n; i++) {
         fscanf(fp, "%d", &array[i]);
     }
@@ -15,14 +24,33 @@ int* read_create_array(FILE* fp, int n) {
     return array;
 }
 
+/**
+ * Writes ratio's information in file. Ratio must be sorted beforhand by rtt_ratio atribute.
+ * 
+ * @param {FILE* fp} - File pointer
+ * @param {Ratios** ratios} - Array of ratio
+ * @param {int len} - Size of array (|S|*|C|)
+ */
+void print_rtt (FILE* fp, Ratio** ratios, int len) {
+    // len = |S||C|
+    for (int i = 0; i < len; i++) {
+        Ratio* ratio = ratio_min(ratios, len - i);
+        fprintf(fp, "%d %d %lf", get_server(ratio), get_client(ratio), get_rtt_ratio(ratio));
+        destroy_ratio(ratio);
+    }
+}
+
 int main(int argc, char** argv) {
-    int n_monitors, n_clients, n_servers, n_nodes, n_edges, i;
+    // open files
     FILE* reader = fopen(argv[1], "r");
     FILE* writer = fopen(argv[2], "w");
 
+    // reads prior information about graph
+    int n_monitors, n_clients, n_servers, n_nodes, n_edges, i;
     fscanf(reader, "%d %d", &n_nodes, &n_edges);
     fscanf(reader, "%d %d %d", &n_servers, &n_clients, &n_monitors);
     
+    // reads and stores servers', clients' and monitors' nodes into an array of integers
     int* servers = read_create_array(reader, n_servers);
     int* clients = read_create_array(reader, n_clients);
     int* monitors = read_create_array(reader, n_monitors);
@@ -30,49 +58,24 @@ int main(int argc, char** argv) {
     int ori, des;
     double weight;
 
+    // initializes node vector and reads and adds first edge
     Node** nodes = init_node_vector(n_nodes);
     fscanf(reader, "%d %d %lf", &ori, &des, &weight);
     add_edge(nodes[ori], des, weight);
 
+    // adds other edges to nodes
     for (i = 1; i < n_edges; i++) {
         fscanf(reader, "%d %d %lf", &ori, &des, &weight);
         add_edge(nodes[ori], des, weight);
     }
 
-    Graph* graph = init_graph(nodes, n_nodes, servers, clients, monitors);
+    // initializes graph with server, monitors and clients
+    Graph* graph = init_graph(nodes, n_nodes, servers, monitors, clients, n_edges);
+    Ratio** ratios = calc_ratios(graph);
+    print_rtt(writer, ratios, n_servers * n_clients);
 
-    // Printa as arestas
-    // for(int i = 0; i < n_nodes; i++){
-    //     Node* node = nodes[i];
-    //     printf("Arestas de %d\n", i);
-    //     for(Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)){
-    //         printf("\tDEST: %d", get_dest(edge));
-    //         printf("\tWEIG: %lf\n", get_weight(edge));
-    //     }
-    //     printf("\n");
-    // }
-
-    double dist1 = dijkstra(graph, servers[1], clients[1], n_edges);
-    double dist2 = dijkstra(graph, clients[1], servers[1], n_edges);
-
-    printf("RESULTADO: %lf\n", dist1+dist2);
-
-    double dist3 = dijkstra(graph, servers[1], monitors[1], n_edges);
-    double dist4 = dijkstra(graph, monitors[1], servers[1], n_edges);
-    printf("RESULTADO 2 pt1: %lf\n", dist3+dist4);
-
-    double dist3_2 = dijkstra(graph, clients[1], monitors[1], n_edges);
-    double dist4_2 = dijkstra(graph, monitors[1], clients[1], n_edges);
-    printf("RESULTADO 2 pt2: %lf\n", dist3_2+dist4_2);
-
-    double dist5 = dijkstra(graph, servers[1], monitors[2], n_edges);
-    double dist6 = dijkstra(graph, monitors[2], servers[1], n_edges);
-    printf("RESULTADO 3 pt1: %lf\n", dist5+dist6);
-
-    double dist5_2 = dijkstra(graph, clients[1], monitors[2], n_edges);
-    double dist6_2 = dijkstra(graph, monitors[2], clients[1], n_edges);
-    printf("RESULTADO 3 pt2: %lf\n", dist5_2+dist6_2);
-
+    // frees allocated memory
+    destroy_ratio_vector(ratios);
     fclose(reader);
     fclose(writer);
     destroy_graph(graph);

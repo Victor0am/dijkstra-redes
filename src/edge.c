@@ -1,9 +1,8 @@
-#include "edge.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "node.h"
+#include "./node.h"
+#include "./edge.h"
 
 struct edge {
     Edge* next;

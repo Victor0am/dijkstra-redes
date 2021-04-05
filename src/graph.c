@@ -2,72 +2,49 @@
 #include "./heap.h"
 #include "./edge.h"
 #include "./node.h"
-#include <float.h>
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * @param nodes nodes with edges 
+ * @param n_nodes number of nodes
+ * @param n_nodes number of edges
+ * @param csm array of clients (index 0), servers (index 1) and monitors (index 2)
+ */
 struct graph {
     Node** nodes;
-    int n;
+    int n_nodes;
+    int n_edges;
     int* csm[3];
 };
 
-Graph* init_graph(Node** nodes, int n, int* servers, int* monitors, int* clients) {
+Graph* init_graph(Node** nodes, int n_nodes, int* servers, int* monitors, int* clients, int n_edges){
     Graph* graph = (Graph*)malloc(sizeof(Graph));
 
-    graph->n = n;
     graph->nodes = nodes;
-    graph->csm[0] = servers;
-    graph->csm[1] = monitors;
-    graph->csm[2] = clients;
+    graph->n_nodes = n_nodes;
+    graph->n_edges = n_edges;
+    graph->csm[0] = clients;
+    graph->csm[1] = servers;
+    graph->csm[2] = monitors;
+    
     return graph;
 }
 
 void destroy_graph(Graph* g) {
-    destroy_node_vector(g->nodes, g->n);
+    destroy_node_vector(g->nodes, g->n_nodes);
     free(g->csm[0]);
     free(g->csm[1]);
     free(g->csm[2]);
     free(g);
 }
 
-/*
-1) Initialize distances of all vertices as infinite.
-
-2) Create an empty priority_queue pq.  Every item
-   of pq is a pair (weight, vertex). Weight (or 
-   distance) is used used as first item  of pair
-   as first item is by default used to compare
-   two pairs
-
-3) Insert source vertex into pq and make its
-   distance as 0.
-
-4) While pq doesn't become empty
-    a) Extract minimum distance vertex from pq. 
-       Let the extracted vertex be u.
-    b) Loop through all adjacent of u and do 
-       following for every vertex v.
-
-           // If there is a shorter path to v
-           // through u. 
-           If dist[v] > dist[u] + weight(u, v)
-
-               (i) Update distance of v, i.e., do
-                     dist[v] = dist[u] + weight(u, v)
-               (ii) Insert v into the pq (Even if v is
-                    already there)
-               
-5) Print distance array dist[] to print all shortest
-   paths. 
-
-*/ 
-
-double dijkstra(Graph* graph, int src, int dest, int n_edges){
-    Heap* heap = heap_init(n_edges, graph->n, src);
+double dijkstra(Graph* graph, int src, int dest){
+    int n_edges = graph->n_edges;
+    Heap* heap = heap_init(graph->n_edges, graph->n_nodes, src);
     double distance;
     heap_insert(heap, src, 0);  
-
+    
     while(!heap_is_empty(heap)){
         int u = heap_min(heap); // remove
         Node* node = graph->nodes[u];
@@ -78,8 +55,6 @@ double dijkstra(Graph* graph, int src, int dest, int n_edges){
 
             int v = get_dest(edge);
             double weight = get_weight(edge);
-//            printf("\tDEST: %d", v);
-//            printf("\tWEIG: %lf\n", weight);
             double dist_u = get_heap_dist(heap, u);
             double dist_v = get_heap_dist(heap, v);
             
@@ -93,7 +68,6 @@ double dijkstra(Graph* graph, int src, int dest, int n_edges){
 
     for(int i =0; i < 5; i++){
         double aux = (get_heap_dist(heap, i) > 1000) ? 1000 : get_heap_dist(heap, i);
-//        printf("DEST %d: %.2lf\n", i, aux);
     }
 
     distance = get_heap_dist(heap, dest);
@@ -103,60 +77,50 @@ double dijkstra(Graph* graph, int src, int dest, int n_edges){
     return distance;
 }
 
-/*
-void Graph::shortestPath(int src)
-{
-    // Create a priority queue to store vertices that
-    // are being preprocessed. This is weird syntax in C++.
-    // Refer below link for details of this syntax
-    // https://www.geeksforgeeks.org/implement-min-heap-using-stl/
-    priority_queue< iPair, vector <iPair> , greater<iPair> > pq;
-  
-    // Create a vector for distances and initialize all
-    // distances as infinite (INF)
-    vector<int> dist(V, INF);
-  
-    // Insert source itself in priority queue and initialize
-    // its distance as 0.
-    pq.push(make_pair(0, src));
-    dist[src] = 0;
-  
-    //  Looping till priority queue becomes empty (or all
-    //  distances are not finalized) 
-    while (!pq.empty())
-    {
-        // The first vertex in pair is the minimum distance
-        // vertex, extract it from priority queue.
-        // vertex label is stored in second of pair (it
-        // has to be done this way to keep the vertices
-        // sorted distance (distance must be first item
-        // in pair)
-        int u = pq.top().second;
-        pq.pop();
-  
-        // 'i' is used to get all adjacent vertices of a vertex
-        list< pair<int, int> >::iterator i;
-        for (i = adj[u].begin(); i != adj[u].end(); ++i)
-        {
-            // Get vertex label and weight of current adjacent
-            // of u.
-            int v = (*i).first;
-            int weight = (*i).second;
-  
-            //  If there is shorted path to v through u.
-            if (dist[v] > dist[u] + weight)
-            {
-                // Updating distance of v
-                dist[v] = dist[u] + weight;
-                pq.push(make_pair(dist[v], v));
-            }
-        }
-    }
-  
-    // Print shortest distances stored in dist[]
-    printf("Vertex   Distance from Source\n");
-    for (int i = 0; i < V; ++i)
-        printf("%d \t\t %d\n", i, dist[i]);
+//calcula e retorna o RTT(source, destiny)
+double calc_RTT(Graph* graph, int source, int destiny){
+    return dijkstra(graph, source, destiny) + dijkstra(graph, destiny, source);
 }
 
-*/
+//retorna o RTT 
+double calc_RTT_with_monitor(Graph* graph, int source, int monitor, int destiny){
+    return calc_RTT(graph, source, monitor) + calc_RTT(graph, destiny, monitor);
+}
+
+//escolhe o menor RTT dentro do vetor
+double get_min_RTT_monitor(Graph* graph, int client, int server){
+    int* monitors = graph->csm[2];
+    
+    double min = calc_RTT_with_monitor(graph, client, monitors[1], server);
+    for (int i = 2; i <= monitors[0]; i++){
+        double aux = calc_RTT_with_monitor(graph, client, monitors[i], server);        
+        if(aux<min){
+            min = aux;
+        }
+    }
+
+    return min;
+}
+
+double RTT_ratio(double RTT, double RTT_m) {
+    return RTT_m / RTT;
+}
+
+
+Ratio** calc_ratios(Graph* graph){
+    int* clients = graph->csm[0];
+    int* servers = graph->csm[1];
+    int n_clients = clients[0];
+    int n_servers = servers[0];
+    
+    Ratio** ratios = init_ratio_vector(n_clients, n_servers);
+    for(int i = 1; i <= n_clients; i++){
+        for(int j = 1; j<= n_servers; j++){
+            double ratio = RTT_ratio(calc_RTT(graph, servers[j], clients[i]), get_min_RTT_monitor(graph, clients[i], servers[j]));
+            Ratio* item = init_ratio(clients[i], servers[j], ratio);
+            insert_ratio(ratios, item, i*(j-1) + j);
+        }
+    }
+
+    return ratios;
+}

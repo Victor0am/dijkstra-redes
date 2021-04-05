@@ -4,11 +4,17 @@
 #include "./edge.h"
 #include <float.h>
 
+/**
+ * @param n number of edges in keys
+ * @param max_n max size of priority queue
+ * @param dist_to array of distances from source to other nodes
+ * @param keys priority queue, where each int is a node index
+ */
 struct heap {
-    int n; // number of edges in keys
-    int max_n; // max size of the priority queue 
-    double* dist_to; // array of distances from source to other nodes
-    int* keys; // priority queue, where each int is a node index
+    int n; 
+    int max_n;
+    double* dist_to;
+    int* keys; 
 };
 
 static double get_dist(Heap* heap, int key) {
@@ -31,16 +37,6 @@ Heap* heap_init(int max_n, int n_nodes, int src) {
     return new;
 }
 
-void heap_insert(Heap* heap, int pos, double new_dist) {
-    heap->n++;
-    heap->keys[heap->n] = pos;
-    heap->dist_to[pos] = new_dist; 
-    fix_up(heap, heap->n);
-    // for(int i = 0; i < heap->n; i++){
-    //     printf("%d", heap->keys[i]);
-    // }
-}
-
 static void exchange (Heap* heap, int j, int k) {
     int aux_edge;
     aux_edge = heap->keys[j];
@@ -48,21 +44,14 @@ static void exchange (Heap* heap, int j, int k) {
     heap->keys[k] = aux_edge;    
 }
 
-void fix_up(Heap* heap, int k) {
-    // swim up()
+static void fix_up(Heap* heap, int k) {
     while (k > 1 && (get_dist(heap, k/2) < get_dist(heap, k))) {
         exchange(heap, k, k/2); 
         k = k/2;
     }
-    /*
-    while (k > 1 && less(a[k/2], a[k])) {
-        exch(a[k], a[k/2]);
-        k = k/2;
-    }
-    */
 }
 
-void fix_down(Heap* heap, int sz, int k) {
+static void fix_down(Heap* heap, int sz, int k) {
     int aux;
 
     while (2 * k <= sz) {
@@ -79,6 +68,13 @@ void fix_down(Heap* heap, int sz, int k) {
     }
 }
 
+void heap_insert(Heap* heap, int pos, double new_dist) {
+    heap->n++;
+    heap->keys[heap->n] = pos;
+    heap->dist_to[pos] = new_dist; 
+    fix_up(heap, heap->n);
+}
+
 int heap_max(Heap* heap) {
     return heap->max_n;
 }
@@ -92,13 +88,6 @@ int heap_size(Heap* heap) {
 }
 
 int heap_min(Heap* heap) {
-    /*
-    Item max = pq[1];
-    exch(pq[1], pq[N]);
-    N--;
-    fix_down(pq, N, 1);
-    return max;
-    */
     int min = heap->keys[1];
     exchange(heap, 1, heap->n);
     heap->n--;

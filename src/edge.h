@@ -1,9 +1,13 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-
 typedef struct edge Edge;
 
+/**
+ * 
+ * 
+ * @param
+ */
 Edge* init_edge_list(int dest, double weight);
 
 int get_dest(Edge* edge);
