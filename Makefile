@@ -9,8 +9,12 @@ EXECUTABLE	:= trab2
 SOURCEDIRS	:= $(shell find $(SRC) -type d)
 INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
 
-ARGS  := 
-ARGS0 := ./input/0.txt
+ARGS    := 
+ARGS0   := ./input/0.txt
+ARGS10  := ./input/N10_S3_C3_M3.txt
+ARGS100 := ./input/N100_S20_C30_M5.txt
+ARGS1K  := ./input/N1000_S50_C300_M10.txt
+ARGS10K := ./input/N10000_S50_C300_M10.txt
 SAIDA := saida.txt
 
 VALGRIND	:= 
@@ -31,6 +35,18 @@ run:
 run0: 
 	./$(EXECUTABLE) $(ARGS0) $(SAIDA)
 
+run10:
+	./$(EXECUTABLE) $(ARGS10) $(SAIDA)
+
+run100:
+	./$(EXECUTABLE) $(ARGS100) $(SAIDA)
+
+run1k:
+	./$(EXECUTABLE) $(ARGS1K) $(SAIDA)
+
+run10k:
+	./$(EXECUTABLE) $(ARGS10K) $(SAIDA)
+	
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $(CINCLUDES) $^ -o $@ $(LIBRARIES) -lm
 
@@ -39,6 +55,18 @@ val:
 
 val0: 
 	valgrind ./$(EXECUTABLE) $(ARGS0) $(SAIDA)
+
+val10:
+	valgrind ./$(EXECUTABLE) $(ARGS10) $(SAIDA)
+
+val100:
+	valgrind ./$(EXECUTABLE) $(ARGS100) $(SAIDA)
+
+val1k:
+	valgrind ./$(EXECUTABLE) $(ARGS1K) $(SAIDA)
+
+val10k:
+	valgrind ./$(EXECUTABLE) $(ARGS10K) $(SAIDA)
 	
 full: 
 	- valgrind -v --leak-check=full ./$(EXECUTABLE) $(N)
