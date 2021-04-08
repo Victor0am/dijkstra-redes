@@ -7,6 +7,7 @@
         "edge.h": "c",
         "stdlib.h": "c",
         "float.h": "c",
-        "node.h": "c"
+        "node.h": "c",
+        "random": "c"
     }
 }

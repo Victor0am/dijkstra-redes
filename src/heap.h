@@ -3,7 +3,7 @@
 
 typedef struct heap Heap;
 
-Heap* heap_init(int max_n, int n_nodes, int src);
+Heap* heap_init(int max_n);
 
 void heap_insert(Heap* heap, int pos, double new_dist);
 

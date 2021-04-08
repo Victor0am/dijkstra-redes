@@ -10,7 +10,7 @@ SOURCEDIRS	:= $(shell find $(SRC) -type d)
 INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
 
 ARGS  := 
-ARGS0 := ./input/0.txt
+ARGS0 := ./input/2.txt
 SAIDA := saida.txt
 
 VALGRIND	:= 
