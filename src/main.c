@@ -31,14 +31,14 @@ int* read_create_array(FILE* fp, int n) {
  * @param {Ratios** ratios} - Array of ratio
  * @param {int len} - Size of array (|S|*|C|)
  */
-void print_rtt(FILE* fp, Ratio** ratios, int len) {
-    // len = |S||C|
-    for (int i = 0; i < len; i++) {
-        Ratio* ratio = ratio_min(ratios, len - i);
-        fprintf(fp, "%d %d %lf", get_server(ratio), get_client(ratio), get_rtt_ratio(ratio));
-        destroy_ratio(ratio);
-    }
-}
+// void print_rtt(FILE* fp, Ratio** ratios, int len) {
+//     // len = |S||C|
+//     for (int i = 0; i < len; i++) {
+//         Ratio* ratio = ratio_min(ratios, len - i);
+//         fprintf(fp, "%d %d %lf", get_server(ratio), get_client(ratio), get_rtt_ratio(ratio));
+//         destroy_ratio(ratio);
+//     }
+// }
 
 int main(int argc, char** argv) {
     // open files

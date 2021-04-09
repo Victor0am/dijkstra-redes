@@ -1,24 +1,18 @@
 #ifndef RATIO_H
 #define RATIO_H
 
+#include "utils.h"
+
 typedef struct ratio Ratio;
 
-Ratio* init_ratio(int client, int server, double ratio);
+Ratio* ratio_init(int max_n);
 
-Ratio** init_ratio_vector(int n_clients, int n_servers);
+void ratio_insert(Ratio* ratio, Item item);
 
-void insert_ratio(Ratio** ratio_v, Ratio* ratio, int n);
+int ratio_is_empty(Ratio* ratio);
 
-Ratio* ratio_min(Ratio** ratios, int sz);
+Item ratio_min(Ratio* ratio);
 
-int get_client(Ratio* ratio);
-
-int get_server(Ratio* ratio);
-
-double get_rtt_ratio(Ratio* ratio);
-
-void destroy_ratio(Ratio* ratio);
-
-void destroy_ratio_vector(Ratio** ratio_v);
+void ratio_destroy(Ratio* ratio);
 
 #endif
