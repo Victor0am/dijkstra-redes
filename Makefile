@@ -11,10 +11,11 @@ INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
 
 ARGS    := 
 ARGS0   := ./input/0.txt
-ARGS10  := ./input/N10_S3_C3_M3.txt
-ARGS100 := ./input/N100_S20_C30_M5.txt
-ARGS1K  := ./input/N1000_S50_C300_M10.txt
-ARGS10K := ./input/N10000_S50_C300_M10.txt
+
+ARGS10  := ./input/1.txt
+ARGS100 := ./input/2.txt
+ARGS1K  := ./input/3.txt
+ARGS10K := ./input/4.txt
 SAIDA := saida.txt
 
 VALGRIND	:= 

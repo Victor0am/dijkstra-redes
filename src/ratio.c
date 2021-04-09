@@ -1,104 +1,91 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "ratio.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
  * @param client id of client
  * @param server id of server
  * @param rtt_ratio ratio between RTT and RTT*
  */
-struct ratio{
-    int client;
-    int server;
-    double rtt_ratio;
+
+struct ratio {
+    int n;
+    int max_n;
+    Item *pq;
 };
 
-Ratio* init_ratio(int client, int server, double ratio){
-    Ratio* new_ratio = (Ratio*) malloc(sizeof(Ratio));
-    
-    new_ratio->client = client;
-    new_ratio->server = server;
-    new_ratio->rtt_ratio = ratio;
+Ratio *ratio_init(int max_n) {
+    Ratio *r = (Ratio *)malloc(sizeof(Ratio));
+    r->n = 0;
+    r->max_n = max_n;
+    r->pq = (Item *)malloc(max_n * sizeof(Item));
 
-    return new_ratio;
+    return r;
 }
 
-Ratio** init_ratio_vector(int n_clients, int n_servers){
-    Ratio** new_ratio_vector = (Ratio**)malloc(sizeof(Ratio*)*(n_clients*n_servers + 1));
+static void ratioify_bottom_top(Ratio *r, int index) {
+    Item temp;
+    int parent_node = (index - 1) / 2;
 
-    return new_ratio_vector;
-}
-
-
- 
-static void exchange(Ratio* r1, Ratio* r2){
-    Ratio* aux;
-    aux = r1;
-    r1 = r2;
-    r2 = aux;    
-}
-
-static int less(Ratio* r1, Ratio* r2) {
-    if (r1->rtt_ratio < r2->rtt_ratio) {
-        return 1;
-    }
-    return 0;
-}
-
-static void fix_up(Ratio** ratios, int k) {
-    while (k > 1 && less(ratios[k/2], ratios[k])) {
-        exchange(ratios[k/2], ratios[k]); 
-        k = k/2;
+    if (r->pq[parent_node].ratio > r->pq[index].ratio) {
+        temp = r->pq[parent_node];
+        r->pq[parent_node] = r->pq[index];
+        r->pq[index] = temp;
+        ratioify_bottom_top(r, parent_node);
     }
 }
 
-static void fix_down(Ratio** ratios, int sz, int k) {
-    int aux;
+static void ratioify_top_bottom(Ratio *h, int parent_node) {
+    int left = parent_node * 2 + 1;
+    int right = parent_node * 2 + 2;
+    int min;
+    Item temp;
 
-    while (2 * k <= sz) {
-        aux = 2*k;
-       
-        if (aux < sz &&  ratios[aux+1]->rtt_ratio < ratios[aux]->rtt_ratio) 
-            aux++;
-        
-        if (ratios[aux]->rtt_ratio <= ratios[k]->rtt_ratio)
-            break;
+    if (left >= h->n || left < 0)
+        left = -1;
+    if (right >= h->n || right < 0)
+        right = -1;
 
-        exchange(ratios[k], ratios[aux]);
-        k = aux;
+    if (left != -1 && h->pq[left].ratio < h->pq[parent_node].ratio)
+        min = left;
+    else
+        min = parent_node;
+    if (right != -1 && h->pq[right].ratio < h->pq[min].ratio)
+        min = right;
+
+    if (min != parent_node) {
+        temp = h->pq[min];
+        h->pq[min] = h->pq[parent_node];
+        h->pq[parent_node] = temp;
+
+        ratioify_top_bottom(h, min);
     }
 }
 
-void insert_ratio(Ratio** ratio_v, Ratio* ratio, int n){
-    ratio_v[n] = ratio;
-    fix_up(ratio_v, n);
+void ratio_insert(Ratio *h, Item item) {
+    if (h->n < h->max_n) {
+        h->pq[h->n] = item;
+        ratioify_bottom_top(h, h->n);
+        h->n++;
+    }
 }
 
-Ratio* ratio_min(Ratio** ratios, int sz) {
-    Ratio* ratio = ratios[1];
-
-    exchange(ratios[1], ratios[sz--]);
-    fix_down(ratios, sz, 1);
-
-    return ratio;
+int ratio_is_empty(Ratio *ratio) {
+    return ratio->n == 0;
 }
 
-int get_client(Ratio* ratio){
-    return ratio->client;
+Item ratio_min(Ratio *h) {
+    Item pop;
+    pop = h->pq[0];
+    h->pq[0] = h->pq[h->n - 1];
+    h->n--;
+
+    ratioify_top_bottom(h, 0);
+    return pop;
 }
 
-int get_server(Ratio* ratio){
-    return ratio->server;
-}
-
-double get_rtt_ratio(Ratio* ratio){
-    return ratio->rtt_ratio;
-}
-
-void destroy_ratio(Ratio* ratio){
+void ratio_destroy(Ratio *ratio) {
+    free(ratio->pq);
     free(ratio);
-}
-
-void destroy_ratio_vector(Ratio** ratio_v){
-    free(ratio_v);
 }

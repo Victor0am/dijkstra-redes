@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/trab2",
-            "args": ["./input", "saida.txt"],
+            "args": ["./input/0.txt", "saida.txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

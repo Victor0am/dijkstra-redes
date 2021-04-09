@@ -9,7 +9,7 @@ typedef struct graph Graph;
 
 Graph* init_graph(Node** nodes, int n, int* servers, int* monitors, int* clients, int n_edges);
 
-double dijkstra(Graph* graph, int src, int dest);
+double* dijkstra(Graph* graph, int src, int* dest1, int* dest2);
 
 void destroy_graph(Graph* g);
 
