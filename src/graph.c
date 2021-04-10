@@ -96,84 +96,6 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
     return destinies;
 }
 
-// double* calc_rtt(Graph* graph, double** dists_clients, double** dists_servers) {
-//     int count = 0;
-//     int n_clients = graph->csm[0][0];
-//     int n_servers = graph->csm[1][0];
-//     double rtt;
-
-//     double* rtt_cs = malloc(sizeof(double) * (n_clients * n_servers));
-//     for (int i = 0; i < n_servers; i++) {
-//         for (int j = 0; j < n_clients; j++) {
-//             rtt = dists_clients[j][i] + dists_servers[i][j]; // Cj->Si + Si->Cj
-//             rtt_cs[count++] = rtt;
-//             // printf("[rtt %d] c: %d s: %d rtt: %.24lf\n", count, graph->csm[0][j+1], graph->csm[1][i+1], rtt);
-//         }
-//     }
-
-//     return rtt_cs;
-// }
-
-// double* calc_rtt_monitor(Graph* graph, double** dists_clients, double** dists_servers, double** dists_monitors) {
-//     int count = 0;
-//     int n_clients = graph->csm[0][0];
-//     int n_servers = graph->csm[1][0];
-//     int n_monitor = graph->csm[2][0];
-
-//     double rtt, rtt1, rtt2, rtt_min;
-
-//     double* rtt_m = malloc(sizeof(double) * (n_clients * n_servers));
-//     for (int i = 0; i < n_servers; i++) {
-//         for (int j = 0; j < n_clients; j++) {
-//             rtt1 = dists_servers[i][n_clients] + dists_monitors[0][i];             // S->M + M->S
-//             rtt2 = dists_clients[j][n_servers] + dists_monitors[0][j + n_servers]; // M->C + C->M
-//             rtt_min = rtt1+rtt2;
-
-//             for (int k = 1; k < n_monitor; k++) {
-//                 rtt1 = dists_servers[i][k + n_clients] + dists_monitors[k][i];              // S->M + M->S
-//                 rtt2 = dists_monitors[k][j + n_servers] + dists_clients[j][k + n_servers];  // M->C + C->M
-//                 rtt = rtt1 + rtt2;
-
-//                 // verifica se rtt* eh menor que o anterior
-//                 if (rtt < rtt_min)
-//                     rtt_min = rtt;
-//             }
-
-//             rtt_m[count++] = rtt_min;
-//             // printf("[rtt min %d] c: %d s: %d rtt: %.24lf\n", count, graph->csm[0][j+1], graph->csm[1][i+1], rtt);
-//         }
-//     }
-
-//     return rtt_m;
-// }
-
-// Ratio* create_ratio(Graph* graph, double* rtt_m, double* rtt_cs, int n_clients, int n_servers) {
-//     int* clients = graph->csm[0];
-//     int* servers = graph->csm[1];
-
-//     int count = 0;
-//     Ratio* ratio_heap = ratio_init(n_clients * n_servers);
-//     Item item;
-//     double rtt_ratio;
-
-//     for (int i = 0; i < n_servers; i++) {
-//         for (int j = 0; j < n_clients; j++) {
-//             rtt_ratio = rtt_m[count] / rtt_cs[count];
-            
-//             item.client = clients[j + 1];
-//             item.server = servers[i + 1];
-//             item.ratio = rtt_ratio;
-            
-//             // printf("c: %d s: %d ratio: %.24lf\n", item.client, item.server, rtt_ratio);
-//             ratio_insert(ratio_heap, item);
-//             count++;
-//         }
-//     }
-
-//     return ratio_heap;
-// }
-
-
 Ratio* create_ratio(Graph* graph, double** dists_clients, double** dists_servers, double** dists_monitors) {
     int* clients = graph->csm[0];
     int* servers = graph->csm[1];
@@ -209,7 +131,6 @@ Ratio* create_ratio(Graph* graph, double** dists_clients, double** dists_servers
             item.server = servers[i + 1];
             item.ratio = rtt_ratio;
             
-            // printf("c: %d s: %d ratio: %.24lf\n", item.client, item.server, rtt_ratio);
             ratio_insert(ratio_heap, item);
         }
     }
@@ -252,21 +173,14 @@ Ratio* calc_ratios(Graph* graph) {
 
     // matriz monitors * (servers + clients)
     double** dists_monitors = init_matrix(graph, n_monitors, monitors, servers, clients);
-
-    // calcula RTT e RTT*
-    // double* rtt_cs = calc_rtt(graph, dists_clients, dists_servers);
-    // double* rtt_m = calc_rtt_monitor(graph, dists_clients, dists_servers, dists_monitors);
-    
     
     // insere razoes na heap
-    // Ratio* ratio_heap = create_ratio(graph, rtt_m, rtt_cs, n_clients, n_servers);
     Ratio* ratio_heap = create_ratio(graph, dists_clients, dists_servers, dists_monitors);
 
     // libera matrizes
     free_matrix(dists_clients, n_clients);
     free_matrix(dists_monitors, n_monitors);
     free_matrix(dists_servers, n_servers);
-    // free(rtt_m);
-    // free(rtt_cs);
+
     return ratio_heap;
 }
