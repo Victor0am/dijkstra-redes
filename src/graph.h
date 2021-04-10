@@ -13,14 +13,8 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2);
 
 void destroy_graph(Graph* g);
 
-double calc_RTT(Graph* graph, int source, int destiny);
-
-double calc_RTT_with_monitor(Graph* graph, int source, int monitor, int destiny);
-
-double get_min_RTT_monitor(Graph* graph, int client, int server);
-
 double RTT_ratio(double RTT, double RTT_m);
 
-Ratio** calc_ratios(Graph* graph);
+Ratio* calc_ratios(Graph* graph);
 
 #endif
