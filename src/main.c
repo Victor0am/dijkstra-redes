@@ -5,6 +5,7 @@
 #include "./graph.h"
 #include "./node.h"
 #include "./ratio.h"
+#include "./utils.h"
 
 /**
  * Reads file of size n and initializes an array with values read from file.
@@ -31,14 +32,13 @@ int* read_create_array(FILE* fp, int n) {
  * @param {Ratios** ratios} - Array of ratio
  * @param {int len} - Size of array (|S|*|C|)
  */
-// void print_rtt(FILE* fp, Ratio** ratios, int len) {
-//     // len = |S||C|
-//     for (int i = 0; i < len; i++) {
-//         Ratio* ratio = ratio_min(ratios, len - i);
-//         fprintf(fp, "%d %d %lf", get_server(ratio), get_client(ratio), get_rtt_ratio(ratio));
-//         destroy_ratio(ratio);
-//     }
-// }
+void print_rtt(FILE* fp, Ratio* ratios, int n) {
+    // len = |S||C|
+    for (int i = 0; i < n; i++) {
+        Item ratio = ratio_min(ratios);
+        fprintf(fp, "%d %d %.16lf\n", ratio.server, ratio.client, ratio.ratio);
+    }
+}
 
 int main(int argc, char** argv) {
     // open files
@@ -71,30 +71,12 @@ int main(int argc, char** argv) {
 
     // initializes graph with server, monitors and clients
     Graph* graph = init_graph(nodes, n_nodes, servers, monitors, clients, n_edges);
-    calc_ratios(graph);
+    Ratio* ratios = calc_ratios(graph);
 
-    // double d1 = dijkstra(graph, 0, 4) + dijkstra(graph, 4, 0);
-    // printf("%lf\n", d1);
-
-    // double d2 = dijkstra(graph, 0, 1) + dijkstra(graph, 1, 0);
-    // double d3 = dijkstra(graph, 1, 4) + dijkstra(graph, 4, 1);
-    // double d4 = dijkstra(graph, 0, 2) + dijkstra(graph, 2, 0);
-    // double d5 = dijkstra(graph, 2, 4) + dijkstra(graph, 4, 2);
-    // printf("%lf %lf %lf %lf\n", d2, d3, d4, d5);
-    // if (d2 + d3 > d4 + d5) {
-    //     printf("%lf\n", (d4 + d5) / (d1));
-    // } else {
-    //     printf("%lf\n", (d2 + d3) / (d1));
-    // }
-
-    // for (int i = 0; i < n_nodes; i++)
-    //     printf("%lf\n", ratios[i]);
-    // Ratio** ratios = calc_ratios(graph);
-    // print_rtt(writer, ratios, n_servers * n_clients);
+    print_rtt(writer, ratios, n_servers * n_clients);
 
     // frees allocated memory
-    // destroy_ratio_vector(ratios);
-    // free(ratios);
+    ratio_destroy(ratios);
     fclose(reader);
     fclose(writer);
     destroy_graph(graph);
