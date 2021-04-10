@@ -16,7 +16,7 @@ ARGS10  := ./input/1.txt
 ARGS100 := ./input/2.txt
 ARGS1K  := ./input/3.txt
 ARGS10K := ./input/4.txt
-SAIDA := saida.txt
+SAIDA := saida/
 
 VALGRIND	:= 
 
@@ -31,22 +31,22 @@ clean:
 	-$(RM) $(OBJECTS)
 
 run: 
-	./$(EXECUTABLE) $(ARGS) $(SAIDA)
+	./$(EXECUTABLE) $(ARGS) ./output/
 
 run0: 
-	./$(EXECUTABLE) $(ARGS0) $(SAIDA)
+	./$(EXECUTABLE) $(ARGS0) ./output/0.txt
 
 run10:
-	./$(EXECUTABLE) $(ARGS10) $(SAIDA)
+	./$(EXECUTABLE) $(ARGS10) ./output/1.txt
 
 run100:
-	./$(EXECUTABLE) $(ARGS100) $(SAIDA)
+	./$(EXECUTABLE) $(ARGS100) ./output/2.txt
 
 run1k:
-	./$(EXECUTABLE) $(ARGS1K) $(SAIDA)
+	./$(EXECUTABLE) $(ARGS1K) ./output/3.txt
 
 run10k:
-	./$(EXECUTABLE) $(ARGS10K) $(SAIDA)
+	./$(EXECUTABLE) $(ARGS10K) ./output/4.txt
 	
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $(CINCLUDES) $^ -o $@ $(LIBRARIES) -lm
@@ -55,19 +55,19 @@ val:
 	valgrind ./$(EXECUTABLE) $(ARGS) $(SAIDA)
 
 val0: 
-	valgrind ./$(EXECUTABLE) $(ARGS0) $(SAIDA)
+	valgrind ./$(EXECUTABLE) $(ARGS0) ./output/0.txt
 
 val10:
-	valgrind ./$(EXECUTABLE) $(ARGS10) $(SAIDA)
+	valgrind ./$(EXECUTABLE) $(ARGS10) ./output/1.txt
 
 val100:
-	valgrind ./$(EXECUTABLE) $(ARGS100) $(SAIDA)
+	valgrind ./$(EXECUTABLE) $(ARGS100) ./output/2.txt
 
 val1k:
-	valgrind ./$(EXECUTABLE) $(ARGS1K) $(SAIDA)
+	valgrind ./$(EXECUTABLE) $(ARGS1K) ./output/3.txt
 
 val10k:
-	valgrind ./$(EXECUTABLE) $(ARGS10K) $(SAIDA)
+	valgrind ./$(EXECUTABLE) $(ARGS10K) ./output/4.txt
 	
 full: 
 	- valgrind -v --leak-check=full ./$(EXECUTABLE) $(N)
