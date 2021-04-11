@@ -59,7 +59,7 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
     dists[src] = 0;
 
     while (!heap_is_empty(heap)) {
-        int u = heap_min(heap); 
+        int u = heap_min(heap);
         Node* node = graph->nodes[u];
 
         for (Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)) {
@@ -96,7 +96,7 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
     return destinies;
 }
 
-Ratio* create_ratio(Graph* graph, double** dists_clients, double** dists_servers, double** dists_monitors) {
+Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, double** dists_monitors) {
     int* clients = graph->csm[0];
     int* servers = graph->csm[1];
     int n_clients = clients[0];
@@ -104,17 +104,21 @@ Ratio* create_ratio(Graph* graph, double** dists_clients, double** dists_servers
     int n_monitor = graph->csm[2][0];
 
     Item item;
+    //Novidades
+    Item* items = (Item*)malloc(n_clients * n_servers * sizeof(Item));
+    int count = 0;
+    //
 
     double rtt_m, rtt_cs, rtt1, rtt2, rtt_min, rtt_ratio;
     Ratio* ratio_heap = ratio_init(n_clients * n_servers);
 
     for (int i = 0; i < n_servers; i++) {
         for (int j = 0; j < n_clients; j++) {
-            rtt_cs = dists_clients[j][i] + dists_servers[i][j];                    // Cj->Si + Si->Cj
+            rtt_cs = dists_clients[j][i] + dists_servers[i][j];  // Cj->Si + Si->Cj
 
-            rtt1 = dists_servers[i][n_clients] + dists_monitors[0][i];             // S->M + M->S
-            rtt2 = dists_clients[j][n_servers] + dists_monitors[0][j + n_servers]; // M->C + C->M
-            rtt_m = rtt1+rtt2;
+            rtt1 = dists_servers[i][n_clients] + dists_monitors[0][i];              // S->M + M->S
+            rtt2 = dists_clients[j][n_servers] + dists_monitors[0][j + n_servers];  // M->C + C->M
+            rtt_m = rtt1 + rtt2;
 
             for (int k = 1; k < n_monitor; k++) {
                 rtt1 = dists_servers[i][k + n_clients] + dists_monitors[k][i];              // S->M + M->S
@@ -125,17 +129,20 @@ Ratio* create_ratio(Graph* graph, double** dists_clients, double** dists_servers
                 if (rtt_m > rtt_min)
                     rtt_m = rtt_min;
             }
-            
+
             rtt_ratio = rtt_m / rtt_cs;
             item.client = clients[j + 1];
             item.server = servers[i + 1];
             item.ratio = rtt_ratio;
-            
-            ratio_insert(ratio_heap, item);
+
+            items[count++] = item;
+
+            // ratio_insert(ratio_heap, item);
         }
     }
 
-    return ratio_heap;
+    // return ratio_heap;
+    return items;
 }
 
 double** init_matrix(Graph* graph, int n_size, int* src, int* dest1, int* dest2) {
@@ -154,7 +161,7 @@ void free_matrix(double** matrix, int rows) {
     free(matrix);
 }
 
-Ratio* calc_ratios(Graph* graph) {
+Item* generate_ratios(Graph* graph) {
     // armazenando o grafo localmente
     int* clients = graph->csm[0];
     int* servers = graph->csm[1];
@@ -173,9 +180,9 @@ Ratio* calc_ratios(Graph* graph) {
 
     // matriz monitors * (servers + clients)
     double** dists_monitors = init_matrix(graph, n_monitors, monitors, servers, clients);
-    
+
     // insere razoes na heap
-    Ratio* ratio_heap = create_ratio(graph, dists_clients, dists_servers, dists_monitors);
+    Item* ratio_heap = calc_ratios(graph, dists_clients, dists_servers, dists_monitors);
 
     // libera matrizes
     free_matrix(dists_clients, n_clients);

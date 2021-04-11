@@ -32,12 +32,27 @@ int* read_create_array(FILE* fp, int n) {
  * @param {Ratios** ratios} - Array of ratio
  * @param {int len} - Size of array (|S|*|C|)
  */
-void print_rtt(FILE* fp, Ratio* ratios, int n) {
+void print_rtt(FILE* fp, Item* ratios, int n) {
     // len = |S||C|
     for (int i = 0; i < n; i++) {
-        Item ratio = ratio_min(ratios);
-        fprintf(fp, "%d %d %.16lf\n", ratio.server, ratio.client, ratio.ratio);
+        fprintf(fp, "%d %d %.16lf\n", ratios[i].server, ratios[i].client, ratios[i].ratio);
     }
+}
+
+static int compare_item(const void* a, const void* b) {
+    Item a1 = *(Item*)a;
+    Item a2 = *(Item*)b;
+
+    if (a1.ratio < a2.ratio) return -1;
+    if (a1.ratio > a2.ratio) return 1;
+
+    if (a1.server < a2.server) return -1;
+    if (a1.server > a2.server) return 1;
+
+    if (a1.client < a2.client) return -1;
+    if (a1.client > a2.client) return 1;
+
+    return 0;
 }
 
 int main(int argc, char** argv) {
@@ -71,12 +86,15 @@ int main(int argc, char** argv) {
 
     // initializes graph with server, monitors and clients
     Graph* graph = init_graph(nodes, n_nodes, servers, monitors, clients, n_edges);
-    Ratio* ratios = calc_ratios(graph);
+    Item* ratios = generate_ratios(graph);
+
+    qsort(ratios, servers[0] * clients[0], sizeof(Item), compare_item);
 
     print_rtt(writer, ratios, n_servers * n_clients);
 
     // frees allocated memory
-    ratio_destroy(ratios);
+    // ratio_destroy(ratios);
+    free(ratios);
     fclose(reader);
     fclose(writer);
     destroy_graph(graph);

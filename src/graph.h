@@ -13,8 +13,8 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2);
 
 void destroy_graph(Graph* g);
 
-double RTT_ratio(double RTT, double RTT_m);
+Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, double** dists_monitors);
 
-Ratio* calc_ratios(Graph* graph);
+Item* generate_ratios(Graph* graph);
 
 #endif
