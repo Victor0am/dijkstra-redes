@@ -60,6 +60,7 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
 
     while (!heap_is_empty(heap)) {
         int u = heap_min(heap);
+        heap_delmin(heap);
         Node* node = graph->nodes[u];
 
         for (Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)) {
@@ -76,6 +77,7 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
                 // Updating distance of v
                 dists[v] = dist_u + weight;
                 heap_insert(heap, v, dist_u + weight);
+                heap_decrease_key(heap, v, dist_u);
             }
         }
     }
