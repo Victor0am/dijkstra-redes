@@ -4,11 +4,10 @@
 #include "./node.h"
 #include "./edge.h"
 
-/**
- * @param {Edge* next} - next struct edge
- * @param {int dest} - destiny
- * @param {double weight} - edge weight
- */
+
+// next - next struct edge
+// dest - destiny
+// double weight - edge weight
 struct edge {
     Edge* next;
     int dest;
