@@ -10,12 +10,10 @@
 #include "./node.h"
 #include "./utils.h"
 
-/**
- * @param nodes nodes with edges 
- * @param n_nodes number of nodes
- * @param n_nodes number of edges
- * @param csm array of clients (index 0), servers (index 1) and monitors (index 2)
- */
+// nodes: nodes with edges 
+// n_nodes: number of nodes
+// n_nodes: number of edges
+// csm: array of clients (index 0), servers (index 1) and monitors (index 2)
 struct graph {
     Node** nodes;
     int n_nodes;
@@ -46,10 +44,12 @@ void destroy_graph(Graph* g) {
 
 double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
     int n_dest1 = dest1[0], n_dest2 = dest2[0];
-    double* destinies = malloc(sizeof(double) * (n_dest1 + n_dest2));
     int n_edges = graph->n_edges;
-    Heap* heap = heap_init(graph->n_edges);
+
+    double* destinies = malloc(sizeof(double) * (n_dest1 + n_dest2));
     double dists[graph->n_nodes];
+
+    Heap* heap = heap_init(graph->n_edges);
     int flag = 0;
 
     for (int i = 0; i < graph->n_nodes; i++)
@@ -104,13 +104,10 @@ Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, 
     int n_monitor = graph->csm[2][0];
 
     Item item;
-    //Novidades
     Item* items = (Item*)malloc(n_clients * n_servers * sizeof(Item));
-    int count = 0;
-    //
 
+    int count = 0;
     double rtt_m, rtt_cs, rtt1, rtt2, rtt_min, rtt_ratio;
-    // Ratio* ratio_heap = ratio_init(n_clients * n_servers);
 
     for (int i = 0; i < n_servers; i++) {
         for (int j = 0; j < n_clients; j++) {
@@ -136,12 +133,9 @@ Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, 
             item.ratio = rtt_ratio;
 
             items[count++] = item;
-
-            // ratio_insert(ratio_heap, item);
         }
     }
 
-    // return ratio_heap;
     return items;
 }
 
