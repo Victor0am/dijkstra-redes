@@ -110,7 +110,7 @@ Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, 
     //
 
     double rtt_m, rtt_cs, rtt1, rtt2, rtt_min, rtt_ratio;
-    Ratio* ratio_heap = ratio_init(n_clients * n_servers);
+    // Ratio* ratio_heap = ratio_init(n_clients * n_servers);
 
     for (int i = 0; i < n_servers; i++) {
         for (int j = 0; j < n_clients; j++) {
@@ -161,6 +161,22 @@ void free_matrix(double** matrix, int rows) {
     free(matrix);
 }
 
+static int compare_item(const void* a, const void* b) {
+    Item a1 = *(Item*)a;
+    Item a2 = *(Item*)b;
+
+    if (a1.ratio < a2.ratio) return -1;
+    if (a1.ratio > a2.ratio) return 1;
+
+    if (a1.server < a2.server) return -1;
+    if (a1.server > a2.server) return 1;
+
+    if (a1.client < a2.client) return -1;
+    if (a1.client > a2.client) return 1;
+
+    return 0;
+}
+
 Item* generate_ratios(Graph* graph) {
     // armazenando o grafo localmente
     int* clients = graph->csm[0];
@@ -182,12 +198,14 @@ Item* generate_ratios(Graph* graph) {
     double** dists_monitors = init_matrix(graph, n_monitors, monitors, servers, clients);
 
     // insere razoes na heap
-    Item* ratio_heap = calc_ratios(graph, dists_clients, dists_servers, dists_monitors);
+    Item* ratios = calc_ratios(graph, dists_clients, dists_servers, dists_monitors);
+
+    qsort(ratios, servers[0] * clients[0], sizeof(Item), compare_item);
 
     // libera matrizes
     free_matrix(dists_clients, n_clients);
     free_matrix(dists_monitors, n_monitors);
     free_matrix(dists_servers, n_servers);
 
-    return ratio_heap;
+    return ratios;
 }
