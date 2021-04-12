@@ -1,5 +1,5 @@
 CC		:= gcc
-# CFLAGS	:= -w 
+CFLAGS	:= 
 
 BIN		:= bin
 SRC		:= src
@@ -10,8 +10,8 @@ SOURCEDIRS	:= $(shell find $(SRC) -type d)
 INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
 
 ARGS    := 
-ARGS0   := ./input/0.txt
 
+ARGS0   := ./input/0.txt
 ARGS10  := ./input/1.txt
 ARGS100 := ./input/2.txt
 ARGS1K  := ./input/3.txt
