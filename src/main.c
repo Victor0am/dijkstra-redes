@@ -4,7 +4,6 @@
 #include "./edge.h"
 #include "./graph.h"
 #include "./node.h"
-#include "./ratio.h"
 #include "./utils.h"
 
 /**
@@ -35,7 +34,7 @@ int* read_create_array(FILE* fp, int n) {
 void print_rtt(FILE* fp, Item* ratios, int n) {
     // len = |S||C|
     for (int i = 0; i < n; i++) {
-        fprintf(fp, "%d %d %lf\n", ratios[i].server, ratios[i].client, ratios[i].ratio);
+        fprintf(fp, "%d %d %.16lf\n", ratios[i].server, ratios[i].client, ratios[i].ratio);
     }
 }
 
