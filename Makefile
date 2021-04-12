@@ -1,3 +1,4 @@
+# Grupo: Beatriz Matias Santana Maia, Henrique Paulino Cruz e Victor Aguiar Marques
 CC		:= gcc
 CFLAGS	:= 
 
@@ -10,13 +11,20 @@ SOURCEDIRS	:= $(shell find $(SRC) -type d)
 INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
 
 ARGS    := 
+SAIDA   := saida.txt
 
-ARGS0   := ./input/0.txt
+# Argumentos utilizados para testar codigo
+
+# Caso teste do pdf
+ARGS0   := ./input/0.txt 
+# Caso de 10 nos
 ARGS10  := ./input/1.txt
+# Caso de 100 nos
 ARGS100 := ./input/2.txt
+# Caso de 1000 nos
 ARGS1K  := ./input/3.txt
+# Caso de 10000 nos
 ARGS10K := ./input/4.txt
-SAIDA := saida/
 
 VALGRIND	:= 
 
@@ -30,8 +38,10 @@ all: clean $(EXECUTABLE)
 clean:
 	-$(RM) $(OBJECTS)
 
+# Comandos para executar
 run: 
-	./$(EXECUTABLE) $(ARGS) ./output/
+	# ./$(EXECUTABLE) $(ARGS) ./output/
+	echo "run0 run10 run100 run1k run10k"
 
 run0: 
 	./$(EXECUTABLE) $(ARGS0) ./output/0.txt
@@ -49,10 +59,12 @@ run10k:
 	./$(EXECUTABLE) $(ARGS10K) ./output/4.txt
 	
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) $(CINCLUDES) $^ -o $@ $(LIBRARIES) -lm
+	$(CC) $(CFLAGS) $(CINCLUDES) $^ -o $@ $(LIBRARIES)
 
+# Comandos para executar com valgrind
 val: 
-	valgrind ./$(EXECUTABLE) $(ARGS) $(SAIDA)
+	# valgrind ./$(EXECUTABLE) $(ARGS) $(SAIDA)
+	echo "val0 val10 val100 val1k val10k"
 
 val0: 
 	valgrind ./$(EXECUTABLE) $(ARGS0) ./output/0.txt
@@ -68,6 +80,3 @@ val1k:
 
 val10k:
 	valgrind ./$(EXECUTABLE) $(ARGS10K) ./output/4.txt
-	
-full: 
-	- valgrind -v --leak-check=full ./$(EXECUTABLE) $(N)
