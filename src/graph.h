@@ -3,7 +3,7 @@
 
 #include "./edge.h"
 #include "./node.h"
-#include "ratio.h"
+#include "./utils.h"
 
 typedef struct graph Graph;
 
