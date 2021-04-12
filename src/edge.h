@@ -4,77 +4,93 @@
 typedef struct edge Edge;
 
 /**
- * Initializes a non-empty edge list.
- * (PT: Inicializa uma lista de edge nao vazia.)
+ * Inicializa uma lista de edge nao vazia.
  * 
- * @param {int dest} Node value of the destiny of directed edge 
- * @param {double weight} Value of edge's weight
+ * @param {int dest} No destino da aresta direcionada.
+ * @param {double weight} Peso da aresta direcionada.
+ *
+ * @pre valores de dest e weight sao conhecidos.
+ * @post lista de edge eh inicializada e nao vazia.
  * 
- * @return edge list with new edge
+ * @return lista de edge inicializada com um item
  */
 Edge* init_edge_list(int dest, double weight);
 
 /**
- * Returns edge's destiny value
- * (PT: Retorna o valor de destino do edge.)
+ * Retorna o valor de destino do edge.
  * 
- * @param {Edge* edge} 
+ * @param {Edge* edge} lista de arestas.
  * 
- * @return value of edge's destiny
+ * @pre lista de edge inicializada com pelo menos um item inicializado.
+ * @post nenhuma.
+ * 
+ * @return valor do destino do primeiro item da lista de edge.
  */
 int get_dest(Edge* edge);
 
 /**
- * Returns edge's weight value
- * (PT: Retorna o valor de peso do edge.)
+ * Retorna o valor de peso do edge.
  * 
- * @param {Edge* edge} 
+ * @param {Edge* edge} lista de arestas.
  * 
- * @return value of edge's weight
+ * @pre lista de edge inicializada com pelo menos um item inicializado.
+ * @post nenhuma.
+ * 
+ * @return peso do primeiro item da lista de edge.
  */
 double get_weight(Edge* edge);
 
 /**
- * Set edge's weight value
- * (PT: Configura o valor de peso do edge.)
+ * Configura o valor de peso do edge.
  * 
- * @param {Edge* edge} 
- * @param {double weight} new weight
+ * @param {Edge* edge} lista de arestas.
+ * @param {double weight} novo peso.
+ * 
+ * @pre lista de edge inicializada com pelo menos um item inicializado e valor de weight eh conhecido.
+ * @post valor de weight eh modificado.
  *  */
 void set_weight(Edge* edge, double weight);
 
 /**
- * Return next edge.
- * (PT: Retorna a proxima aresta)
+ * Retorna o segundo item da lista de edge.
  * 
- * @param {Edge* edge}
+ * @param {Edge* edge} lista de edge.
  * 
- * @return the next edge
+ * @pre lista de edge inicializada com pelo menos um item inicializado.
+ * @post nenhuma.
+ * 
+ * @return segundo item da lista de edge.
  */
 Edge* get_next(Edge* edge);
 
 /**
- * Set edge's next edge.
- * (PT: Configura a proxima aresta da estrutura Edge.)
+ * Configura a proxima aresta da estrutura Edge.
  * 
- * @param {Edge* edge} 
- * @param {Edge* next}
+ * @param {Edge* edge} lista de edge que o proximo item sera modificado.
+ * @param {Edge* next} lista de edge que vai ser adicionada a edge.
+ * 
+ * @pre listas de edge existem e possuem pelo menos um item inicializado.
+ * @post o proximo item da lista aponta para lista de edge next.
  */
 void set_next(Edge* edge, Edge* next);
 
 /**
- * Frees edge's allocated memory
- * (PT: libera memoria alocada da aresta)
+ * Libera memoria alocada do item da lista de edge.
  * 
- * @param {Edge* edge}
+ * @param {Edge* edge} lista de edge que memoria sera liberada
+ * 
+ * @pre lista de edge inicializada com pelo menos um item inicializado.
+ * @post item eh liberado.
  */
 void destroy_edge(Edge* edge);
 
 /**
- * Frees edge's allocated memory
- * (PT: libera memoria alocada da aresta)
+ * Libera memoria alocada da lista de de edge
  * 
- * @param {Edge* edge}
+ * @param {Edge* edge} lista de edge que memoria sera liberada
+ * 
+ * @pre lista de edge inicializada
+ * @post memoria alocada por lista de edge liberada
  */
 void destroy_edge_list(Edge* edges);
 

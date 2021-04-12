@@ -5,9 +5,9 @@
 #include "./edge.h"
 
 
-// next - next struct edge
-// dest - destiny
-// double weight - edge weight
+// next - proximo item da lista
+// dest - destino da aresta direcionada
+// double weight - peso da aresta direcionada
 struct edge {
     Edge* next;
     int dest;
