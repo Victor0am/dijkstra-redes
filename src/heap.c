@@ -7,7 +7,7 @@
 #include "./edge.h"
 
 // dist: peso
-// src: identificao do item
+// src: identificado do item
 typedef struct pair {
     double dist;
     int key;

@@ -2,6 +2,7 @@
 #define IO_H
 
 #include <stdio.h>
+
 #include "./utils.h"
 
 /**
@@ -10,7 +11,7 @@
  * @param {int n} - tamanho do array - 1.
  * 
  * @pre Ponteiro para um arquivo valido e tamanho do vetor eh conhecido.
- * @post Vetor eh iniciazliado e preenchido.
+ * @post Vetor eh inicializado e preenchido.
  * 
  * @return vetor de inteiros
  */

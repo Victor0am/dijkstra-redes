@@ -3,9 +3,9 @@
 
 #include "./edge.h"
 #include "./graph.h"
+#include "./io.h"
 #include "./node.h"
 #include "./utils.h"
-#include "./io.h"
 
 int main(int argc, char** argv) {
     // abre arquivos
@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
         add_edge(nodes[ori], des, weight);
     }
 
-    // iniciliazia grafo preenchido com informacoes 
+    // inicializa grafo preenchido com informacoes
     Graph* graph = init_graph(nodes, n_nodes, servers, monitors, clients, n_edges);
 
     // gera razoes RTT/RTTs* dos clientes e servidores

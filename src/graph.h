@@ -73,7 +73,7 @@ void destroy_graph(Graph* g);
  * 
  * @post RTTs e RTTs* sao inicializado e conhecidos.
  * 
- * @return vetor de Item com os Item incializados. 
+ * @return vetor de Item com os Item inicializados. 
  */
 Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, double** dists_monitors);
 
@@ -86,7 +86,7 @@ Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, 
  * @pre grafo inicializado e nao vazio 
  * @post RTTs e RTTs* sao inicializado e conhecidos.
  * 
- * @return vetor de Item com os Item incializados. 
+ * @return vetor de Item com os Item inicializados. 
  */
 Item* generate_ratios(Graph* graph);
 
