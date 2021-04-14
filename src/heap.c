@@ -6,18 +6,16 @@
 
 #include "./edge.h"
 
-/**
- * @param n number of edges in keys
- * @param max_n max size of priority queue
- * @param dist array of distances from source to other nodes
- * @param keys priority queue, where each int is a node index
- */
-
+// dist: peso 
+// src: identificao do item
 typedef struct pair {
     double dist;
     int src;
 } Pair;
 
+// n: quantidade de itens na heap
+// max_n: quantidade maxima de itens na heap
+// pq: priority queue
 struct heap {
     int n;
     int max_n;

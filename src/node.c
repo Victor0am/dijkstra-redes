@@ -5,6 +5,7 @@
 
 #include "./edge.h"
 
+// w: lista de arestas
 struct node {
     Edge* w;
 };

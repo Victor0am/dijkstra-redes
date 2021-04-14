@@ -5,50 +5,19 @@
 #include "./graph.h"
 #include "./node.h"
 #include "./utils.h"
-
-/**
- * Reads file of size n and initializes an array with values read from file.
- * (PT: Ler arquivo de tamanho n e inicializa um vetor com valores lido do arquivo.)
- * @param {FILE* fp} - File pointer
- * @param {int n} - Size of array - 1
- * @return array initialized and stores values read from file.
- */
-int* read_create_array(FILE* fp, int n) {
-    int* array = (int*)malloc(sizeof(int) * (n + 1));
-    array[0] = n;  // first index stores the size of the vector
-    for (int i = 1; i <= n; i++) {
-        fscanf(fp, "%d", &array[i]);
-    }
-
-    return array;
-}
-
-/**
- * Writes ratio's information in file. The ratio structure must be sorted beforhand by rtt_ratio atribute.
- * (PT: Escreve as informacoes de ratio no arquivo. A estrutura ratio deve estar anteriormente organizado pelo atributo rtt_ratio.)
- * 
- * @param {FILE* fp} - File pointer
- * @param {Ratios** ratios} - Array of ratio
- * @param {int len} - Size of array (|S|*|C|)
- */
-void print_rtt(FILE* fp, Item* ratios, int n) {
-    // len = |S||C|
-    for (int i = 0; i < n; i++) {
-        fprintf(fp, "%d %d %.16lf\n", ratios[i].server, ratios[i].client, ratios[i].ratio);
-    }
-}
+#include "./io.h"
 
 int main(int argc, char** argv) {
-    // open files
+    // abre arquivos
     FILE* reader = fopen(argv[1], "r");
     FILE* writer = fopen(argv[2], "w");
 
-    // reads prior information about graph
+    // ler informacao sobre quanto e quem sao os nos monitores, clientes e servidores
     int n_monitors, n_clients, n_servers, n_nodes, n_edges, i;
     fscanf(reader, "%d %d", &n_nodes, &n_edges);
     fscanf(reader, "%d %d %d", &n_servers, &n_clients, &n_monitors);
 
-    // reads and stores servers', clients' and monitors' nodes into an array of integers
+    // ler e armazena informacoes dos nos em um vetor de inteiros
     int* servers = read_create_array(reader, n_servers);
     int* clients = read_create_array(reader, n_clients);
     int* monitors = read_create_array(reader, n_monitors);
@@ -56,25 +25,27 @@ int main(int argc, char** argv) {
     int ori, des;
     double weight;
 
-    // initializes node vector and reads and adds first edge
+    // inicialida vetor de no em que cada indice eh referente a um no e ler e adiciona primeira aresta.
     Node** nodes = init_node_vector(n_nodes);
     fscanf(reader, "%d %d %lf", &ori, &des, &weight);
     add_edge(nodes[ori], des, weight);
 
-    // adds other edges to nodes
+    // adiciona as outras arestas
     for (i = 1; i < n_edges; i++) {
         fscanf(reader, "%d %d %lf", &ori, &des, &weight);
         add_edge(nodes[ori], des, weight);
     }
 
-    // initializes graph with server, monitors and clients
+    // iniciliazia grafo preenchido com informacoes 
     Graph* graph = init_graph(nodes, n_nodes, servers, monitors, clients, n_edges);
+
+    // gera razoes RTT/RTTs* dos clientes e servidores
     Item* ratios = generate_ratios(graph);
 
+    // armazena em um arquivo servidor, cliente e razao RTT/RTT*
     print_rtt(writer, ratios, n_servers * n_clients);
 
-    // frees allocated memory
-    // ratio_destroy(ratios);
+    // libera memoria alocada
     free(ratios);
     fclose(reader);
     fclose(writer);

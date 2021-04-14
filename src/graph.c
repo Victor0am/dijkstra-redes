@@ -10,16 +10,17 @@
 #include "./node.h"
 #include "./utils.h"
 
-// nodes: nodes with edges 
-// n_nodes: number of nodes
-// n_nodes: number of edges
-// csm: array of clients (index 0), servers (index 1) and monitors (index 2)
+// nodes: nos do grafo
+// n_nodes: numero de nos no grafo
+// n_edges: numero de arestas
+// csm: vetor de vetores de clients (indice 0), servers (indice 1) e monitors (indice 2). Indice 0 de cada vetor possui o seu tamanho.
 struct graph {
     Node** nodes;
     int n_nodes;
     int n_edges;
     int* csm[3];
 };
+
 
 Graph* init_graph(Node** nodes, int n_nodes, int* servers, int* monitors, int* clients, int n_edges) {
     Graph* graph = (Graph*)malloc(sizeof(Graph));
@@ -59,21 +60,21 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
     dists[src] = 0;
 
     while (!heap_is_empty(heap)) {
+        // valor do indice com menor peso 
         int u = heap_min(heap);
+        
         Node* node = graph->nodes[u];
 
         for (Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)) {
-            // Get vertex label and weight of current adjacent
-            // of u.
-
+            // recebe vertice destino e peso da aresta adjacente do no inicial 
             int v = get_dest(edge);
             double weight = get_weight(edge);
             double dist_u = dists[u];
             double dist_v = dists[v];
 
-            //  If there is shorted path to v through u.
+            // verifica se a distancia ate v eh maior que de u + peso da aresta adjacente
             if (dist_v > dist_u + weight) {
-                // Updating distance of v
+                // atualiza a distancia de v
                 dists[v] = dist_u + weight;
                 heap_insert(heap, v, dist_u + weight);
             }
@@ -139,7 +140,7 @@ Item* calc_ratios(Graph* graph, double** dists_clients, double** dists_servers, 
     return items;
 }
 
-double** init_matrix(Graph* graph, int n_size, int* src, int* dest1, int* dest2) {
+static double** init_matrix(Graph* graph, int n_size, int* src, int* dest1, int* dest2) {
     double** dists = malloc(sizeof(double) * n_size);
     for (int i = 1; i <= n_size; i++) {
         dists[i - 1] = dijkstra(graph, src[i], dest1, dest2);
@@ -148,7 +149,7 @@ double** init_matrix(Graph* graph, int n_size, int* src, int* dest1, int* dest2)
     return dists;
 }
 
-void free_matrix(double** matrix, int rows) {
+static void free_matrix(double** matrix, int rows) {
     for (int i = 0; i < rows; i++) {
         free(matrix[i]);
     }
