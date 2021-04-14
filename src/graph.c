@@ -21,7 +21,6 @@ struct graph {
     int* csm[3];
 };
 
-
 Graph* init_graph(Node** nodes, int n_nodes, int* servers, int* monitors, int* clients, int n_edges) {
     Graph* graph = (Graph*)malloc(sizeof(Graph));
 
@@ -60,13 +59,13 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
     dists[src] = 0;
 
     while (!heap_is_empty(heap)) {
-        // valor do indice com menor peso 
+        // valor do indice com menor peso
         int u = heap_min(heap);
-        
+        heap_delmin(heap);
         Node* node = graph->nodes[u];
 
         for (Edge* edge = get_w(node); edge != NULL; edge = get_next(edge)) {
-            // recebe vertice destino e peso da aresta adjacente do no inicial 
+            // recebe vertice destino e peso da aresta adjacente do no inicial
             int v = get_dest(edge);
             double weight = get_weight(edge);
             double dist_u = dists[u];
@@ -77,6 +76,7 @@ double* dijkstra(Graph* graph, int src, int* dest1, int* dest2) {
                 // atualiza a distancia de v
                 dists[v] = dist_u + weight;
                 heap_insert(heap, v, dist_u + weight);
+                heap_decrease_key(heap, v, dist_u);
             }
         }
     }

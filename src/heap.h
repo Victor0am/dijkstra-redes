@@ -11,6 +11,10 @@ int heap_is_empty(Heap* heap);
 
 int heap_min(Heap* heap);
 
+void heap_delmin(Heap* heap);
+
+void heap_decrease_key(Heap* heap, int id, double value);
+
 void heap_destroy(Heap* heap);
 
 #endif
