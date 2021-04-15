@@ -5,13 +5,12 @@
 
 #include "./edge.h"
 
-// w: lista de arestas
+// w - lista de arestas
 struct node {
     Edge* w;
 };
 
 Node* init_node() {
-    // initializes empty node
     Node* new_node = (Node*)malloc(sizeof(Node));
     new_node->w = NULL;
     return new_node;
