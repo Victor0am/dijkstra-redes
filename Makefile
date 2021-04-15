@@ -1,7 +1,7 @@
 # Grupo: 
 # Beatriz Matias Santana Maia: 2019107651
-# Henrique Paulino Cruz:
-# Victor Aguiar Marques:
+# Henrique Paulino Cruz: 2019107869
+# Victor Aguiar Marques: 2018206897
 
 CC		:= gcc
 CFLAGS	:= 
