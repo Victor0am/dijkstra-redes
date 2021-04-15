@@ -41,17 +41,6 @@ int get_dest(Edge* edge);
 double get_weight(Edge* edge);
 
 /**
- * Configura o valor de peso do edge.
- * 
- * @param {Edge* edge} lista de arestas.
- * @param {double weight} novo peso.
- * 
- * @pre lista de edge inicializada com pelo menos um item inicializado e valor de weight eh conhecido.
- * @post valor de weight eh modificado.
- *  */
-void set_weight(Edge* edge, double weight);
-
-/**
  * Retorna o segundo item da lista de edge.
  * 
  * @param {Edge* edge} lista de edge.

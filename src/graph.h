@@ -46,10 +46,8 @@ Graph* init_graph(Node** nodes, int n_nodes, int* servers, int* monitors, int* c
 double* dijkstra(Graph* graph, int src, int* dest1, int* dest2);
 
 /**
- * Algortimo de Dijkstra. Percorre os caminhos considerando a fonte (source) e verifica qual a menor 
- * distancia do no fonte ate os outros nos. Como alguns nos nao sao uteis (nao sao do tipo servidor, 
- * monitor ou cliente), eh importante informar os nos destinos uteis (vetores dest1 e dest2 com os valores
- * dos nos). 
+ * Libera toda a memoria que foi alocada inicialmente para um graph, libera tambem o vetor de nodes que eh
+ * enviado para o graph em sua inicializacao. 
  * 
  * @param {Graph* graph} Grafo.
  * 

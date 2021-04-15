@@ -1,9 +1,9 @@
+#include "./edge.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "./node.h"
-#include "./edge.h"
-
 
 // next - proximo item da lista
 // dest - destino da aresta direcionada
@@ -23,20 +23,16 @@ Edge* init_edge_list(int dest, double weight) {
     return new_edge;
 }
 
-int get_dest(Edge* edge){
+int get_dest(Edge* edge) {
     return edge->dest;
 }
 
-double get_weight(Edge* edge){
+double get_weight(Edge* edge) {
     return edge->weight;
 }
 
-void set_weight(Edge* edge, double weight) {
-    edge->weight = weight;
-}
-
-Edge* get_next(Edge* edge){
-    if(edge->next != NULL){
+Edge* get_next(Edge* edge) {
+    if (edge->next != NULL) {
         return edge->next;
     }
 }

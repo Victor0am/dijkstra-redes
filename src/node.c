@@ -1,7 +1,7 @@
 #include "./node.h"
 
+#include <stdio.h>
 #include <stdlib.h>
-#include<stdio.h>
 
 #include "./edge.h"
 
@@ -39,10 +39,6 @@ void add_edge(Node* node, int dest, double weight) {
 
 Edge* get_w(Node* node) {
     return node->w;
-}
-
-void set_w(Node* node, Edge* w) {
-    node->w = w;
 }
 
 void destroy_node(Node* node) {
